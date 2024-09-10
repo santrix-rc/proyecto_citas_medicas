@@ -1,1 +1,3 @@
 
+# Este proyecto no tiene dependencias externas específicas, solo requiere Python y Tkinter.
+# Tkinter generalmente viene incluido con la instalación estándar de Python.
