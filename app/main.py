@@ -1,56 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-import json
-
-
-class Cita:
-    def __init__(self, paciente, medico, fecha, hora):
-        self.paciente = paciente
-        self.medico = medico
-        self.fecha = fecha
-        self.hora = hora
-
-
-class GestionCitas:
-    def __init__(self):
-        # Datos quemados con citas y médicos predefinidos
-        self.citas = [
-            Cita("Juan Pérez", "Dr. Gómez", "2024-09-15", "10:00"),
-            Cita("Laura Martínez", "Dra. Herrera", "2024-09-16", "11:00")
-        ]
-        self.medicos = {
-            "Dr. Gómez": ["2024-09-15", "2024-09-16"],
-            "Dra. Herrera": ["2024-09-16", "2024-09-17"],
-            "Dr. Ramírez": ["2024-09-17", "2024-09-18"]
-        }
-        self.horarios = {
-            "Dr. Gómez": ["10:00", "11:00", "12:00"],
-            "Dra. Herrera": ["09:00", "11:00", "13:00"],
-            "Dr. Ramírez": ["08:00", "10:00", "12:00"]
-        }
-
-    def agendar_cita(self, paciente, medico, fecha, hora):
-        nueva_cita = Cita(paciente, medico, fecha, hora)
-        self.citas.append(nueva_cita)
-        return f"Cita agendada para {paciente} con {medico} el {fecha} a las {hora}."
-
-    def cancelar_cita(self, cita_seleccionada):
-        if cita_seleccionada:
-            self.citas.remove(cita_seleccionada)
-            return f"Cita de {cita_seleccionada.paciente} con {cita_seleccionada.medico} ha sido cancelada."
-        return "Cita no encontrada."
-
-    def mostrar_citas(self):
-        if len(self.citas) == 0:
-            return "No hay citas registradas."
-        return [f"{cita.paciente} con {cita.medico} el {cita.fecha} a las {cita.hora}" for cita in self.citas]
-
-    def generar_reporte_json(self):
-        # Generar el reporte en formato JSON
-        reporte = [{"paciente": cita.paciente, "medico": cita.medico, "fecha": cita.fecha, "hora": cita.hora}
-                   for cita in self.citas]
-        return json.dumps(reporte, indent=4)
-
+from gestor_citas import GestionCitas
+from reporte import Reporte
 
 class App:
     def __init__(self, root):
@@ -101,7 +52,6 @@ class App:
         self.button_reporte.pack()
 
     def actualizar_fecha(self, medico):
-        # Actualizar la lista de fechas y horarios según el médico seleccionado
         self.fecha_var.set(self.gestion_citas.medicos[medico][0])
         menu = self.fecha_menu["menu"]
         menu.delete(0, "end")
@@ -131,12 +81,11 @@ class App:
             messagebox.showinfo("Cancelar Cita", "No hay citas para cancelar.")
             return
 
-        # Crear una ventana para mostrar las citas y seleccionar cuál cancelar
         cancel_window = tk.Toplevel(self.root)
         cancel_window.title("Selecciona una Cita para Cancelar")
         cancel_window.geometry("400x300")
 
-        citas_var = tk.StringVar(value=[f"{cita.paciente} con {cita.medico} el {cita.fecha} a las {cita.hora}" for cita in citas])
+        citas_var = tk.StringVar(value=[str(cita) for cita in citas])
         listbox = tk.Listbox(cancel_window, listvariable=citas_var, height=10)
         listbox.pack(fill=tk.BOTH, expand=True)
 
@@ -154,14 +103,13 @@ class App:
         cancelar_button.pack()
 
     def generar_reporte(self):
-        reporte_json = self.gestion_citas.generar_reporte_json()
+        reporte_json = Reporte.generar_reporte_json(self.gestion_citas.citas)
         messagebox.showinfo("Reporte JSON", reporte_json)
         print("Reporte JSON generado:\n", reporte_json)
 
 # Autor: Santiago
-# Fecha: 2024-09-10
-# Versión: 1.0.2
-
+# Fecha: 2024-09-11
+# Versión: 1.0.3
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
