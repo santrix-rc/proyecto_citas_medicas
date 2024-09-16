@@ -5,6 +5,3 @@ class Cita:
         self.medico = medico
         self.fecha = fecha
         self.hora = hora
-
-    def __str__(self):
-        return f"{self.paciente} con {self.medico} el {self.fecha} a las {self.hora}"
