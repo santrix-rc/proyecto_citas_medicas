@@ -1,6 +1,5 @@
-# Autor: Santiago
 class Paciente:
-    def __init__(self, nombre, edad, historial_medico):
+    def __init__(self, nombre, edad, telefono):
         self.nombre = nombre
         self.edad = edad
-        self.historial_medico = historial_medico
+        self.telefono = telefono
