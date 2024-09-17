@@ -1,4 +1,3 @@
-# Autor: Santiago
 class Cita:
     def __init__(self, paciente, medico, fecha, hora):
         self.paciente = paciente
