@@ -1,27 +1,22 @@
-from clases.cita import Cita
-from clases.medico import Medico
-from clases.reporte import Reporte
-
+# gestion_citas.py
 class GestionCitas:
     def __init__(self):
-        self.citas = []
         self.medicos = {
-            "Dr. Gómez": Medico("Dr. Gómez", [Especialidad("Cardiología")]),
-            "Dra. Herrera": Medico("Dra. Herrera", [Especialidad("Dermatología")]),
-            "Dr. Ramírez": Medico("Dr. Ramírez", [Especialidad("Pediatría")])
+            "Dr. Pérez": ["2024-09-17", "2024-09-18"],
+            "Dr. García": ["2024-09-19", "2024-09-20"]
+        }
+        self.horas_disponibles = {
+            ("Dr. Pérez", "2024-09-17"): ["10:00", "11:00", "12:00"],
+            ("Dr. Pérez", "2024-09-18"): ["09:00", "10:00", "14:00"],
+            ("Dr. García", "2024-09-19"): ["08:00", "12:00", "16:00"],
+            ("Dr. García", "2024-09-20"): ["09:00", "11:00", "15:00"]
         }
 
-        # Agregamos disponibilidad a los médicos
-        self.medicos["Dr. Gómez"].agregar_disponibilidad("2024-09-15", ["10:00", "11:00", "12:00"])
-        self.medicos["Dra. Herrera"].agregar_disponibilidad("2024-09-16", ["09:00", "11:00", "13:00"])
-        self.medicos["Dr. Ramírez"].agregar_disponibilidad("2024-09-17", ["08:00", "10:00", "12:00"])
+    def obtener_fechas_disponibles(self, medico):
+        return self.medicos.get(medico, [])
 
-    def agregar_disponibilidad_medico(self, medico, fecha, horas):
-        if medico in self.medicos:
-            self.medicos[medico].agregar_disponibilidad(fecha, horas)
+    def obtener_horas_disponibles(self, medico, fecha):
+        return self.horas_disponibles.get((medico, fecha), [])
 
     def agendar_cita(self, paciente, medico, fecha, hora):
-        nueva_cita = Cita(paciente, medico, fecha, hora)
-        self.citas.append(nueva_cita)
         return f"Cita agendada para {paciente} con {medico} el {fecha} a las {hora}."
-
